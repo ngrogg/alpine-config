@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # Alpine Config
 # BASH script to configure a blank Alpine Linux install for daily use
@@ -8,10 +8,13 @@
 doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
 
 # Prompt user to check repo
+echo ""
 echo "Double check repo files before proceeding."
 echo "Ensure no typos and that community repo is enabled."
 echo "Script WILL fail if either criteria is unmet."
+echo ""
 echo "Press enter when ready to proceed"
+echo ""
 
 read junkInput
 
@@ -66,16 +69,8 @@ cp dotfiles/.vimrc.simple ~/.vimrc
 doas cp alpine-config/NetworkManagerFiles/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf
 doas cp alpine-config/NetworkManagerFiles/any-user.conf /etc/NetworkManager/conf.d/any-user.conf
 
-## Disable conflicting WIFI services
-doas rc-service networking stop
-doas rc-service wpa_supplicant stop
-
 ## Restart Network Manager
 doas rc-service networkmanager restart
-
-## Disable conflicting WIFI services
-doas rc-update del networking boot
-doas rc-update del wpa_supplicant boot
 
 ### Enable networkmanager on boot
 doas rc-update add networkmanager default
