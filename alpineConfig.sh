@@ -27,7 +27,6 @@ doas apk upgrade
 
 # Install packages
 doas apk add \
-        vim \
         fastfetch \
         font-awesome \
         font-dejavu \
@@ -42,10 +41,10 @@ doas apk add \
         mesa-va-gallium \
         networkmanager \
         networkmanager-tui \
-        networkmanager-wifi \
         network-manager-applet \
         shadow \
         ufw \
+        vim \
         zsh \
         zsh-vcs
 
