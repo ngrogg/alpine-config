@@ -7,6 +7,17 @@
 # Set to always use latest stable release, change if not desired
 doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
 
+# Prompt user to check repo
+echo "Double check repo files before proceeding."
+echo "Ensure no typos and that community repo is enabled."
+echo "Script WILL fail if either criteria is unmet."
+echo "Press enter when ready to proceed"
+
+read junkInput
+
+# Open repo
+doas vi /etc/apk/repositories
+
 # Check for package updates
 doas apk update
 doas apk upgrade
@@ -23,6 +34,7 @@ doas apk add \
         font-noto-extra \
         font-terminus \
         git \
+        ip6tables \
         mesa-dri-gallium \
         mesa-va-gallium \
         networkmanager \
@@ -30,6 +42,7 @@ doas apk add \
         networkmanager-wifi \
         network-manager-applet \
         shadow \
+        ufw \
         zsh \
         zsh-vcs
 
@@ -66,6 +79,20 @@ doas rc-update del wpa_supplicant boot
 
 ### Enable networkmanager on boot
 doas rc-update add networkmanager default
+
+# Configure UFW w/ basic setup. May need adjusted depending on exact system setup
+doas ufw default deny incoming
+doas ufw default allow outgoing
+doas ufw default deny forward
+doas ufw allow in on lo
+doas ufw allow out on lo
+doas ufw logging on
+doas ufw limit ssh
+doas ufw enable
+doas ufw status verbose
+
+# Add UFW init scripts
+doas rc-update add ufw
 
 # Change default shell to ZSH
 mkdir -p ~/.zsh/cache
