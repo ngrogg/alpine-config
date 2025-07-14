@@ -95,3 +95,8 @@ chsh -s $(which zsh)
 # Configure desktop
 cd ~/
 doas setup-desktop
+
+# Commented out for now, may not be needed
+## Configure flatpak
+#doas apk add flatpak
+#flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
