@@ -8,6 +8,6 @@ May not fit all use-cases, strongly recommend against just running without readi
 
 wget command for script on a fresh install. <br>
 Main, <br>
-wget https://raw.githubusercontent.com/ngrogg/alpine-config/refs/heads/main/alpineConfig.sh <br>
+`wget https://raw.githubusercontent.com/ngrogg/alpine-config/refs/heads/main/alpineConfig.sh` <br>
 Testing, <br>
-wget https://raw.githubusercontent.com/ngrogg/alpine-config/refs/heads/testing/alpineConfig.sh <br>
+`wget https://raw.githubusercontent.com/ngrogg/alpine-config/refs/heads/testing/alpineConfig.sh` <br>

@@ -4,16 +4,26 @@
 # BASH script to configure a blank Alpine Linux install for daily use
 # By Nicholas Grogg
 
+# Prompt user to run script in a screen session
+echo ""
+echo "If possible this script should be run in a screen/tmux session"
+echo ""
+echo "Press enter when ready to proceed or control + c to cancel"
+echo ""
+
 # Set to always use latest stable release, change if not desired
 doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
 
 # Prompt user to check repo
 echo ""
 echo "Double check repo files before proceeding."
+echo ""
 echo "Ensure no typos and that community repo is enabled."
 echo "Script WILL fail if either criteria is unmet."
 echo ""
-echo "Press enter when ready to proceed"
+echo "Repo files at /etc/apk/repositories"
+echo ""
+echo "Press enter when ready to proceed or control + c to cancel"
 echo ""
 
 read junkInput
