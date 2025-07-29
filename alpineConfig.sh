@@ -11,14 +11,44 @@ echo ""
 echo "Press enter when ready to proceed or control + c to cancel"
 echo ""
 
-# Set to always use latest stable release, change if not desired
-doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
+# Prompt user to select stable or rolling branch
+echo ""
+echo "Enter 1 for stable or 2 for edge release:"
+echo ""
+echo "Press enter when ready to proceed or control + c to cancel"
+echo ""
+
+read releaseVersion
+
+if [[ $releaseVersion -eq 1 ]]; then
+    echo "Stable"
+    ## Set to always use latest stable release, update version as needed
+    doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
+
+    ## Enable community repo
+    doas sed -i "s/#http/http/g" /etc/apk/repositories
+elif [[ $releaseVersion -eq 2 ]]; then
+    echo "Edge"
+    ## Set to use edge rolling release
+    doas sed -i "s/v3\.22/edge/g" /etc/apk/repositories
+
+    ## Enable community repo
+    doas sed -i "s/#http/http/g" /etc/apk/repositories
+
+    ## Append testing repo to repository file
+    tail -n 1 /etc/apk/repositories | sed "s/community/testing/g" | doas tee -a /etc/apk/repositories
+else
+    echo "Invalid input detected"
+    exit 1
+fi
 
 # Prompt user to check repo
 echo ""
 echo "Double check repo files before proceeding."
 echo ""
 echo "Ensure no typos and that community repo is enabled."
+echo "If using Edge release check for testing repo as well"
+echo ""
 echo "Script WILL fail if either criteria is unmet."
 echo ""
 echo "Repo files at /etc/apk/repositories"
