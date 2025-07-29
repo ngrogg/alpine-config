@@ -4,33 +4,63 @@
 # BASH script to configure a blank Alpine Linux install for daily use
 # By Nicholas Grogg
 
-# Prompt user to run script in a screen session
-echo ""
-echo "If possible this script should be run in a screen/tmux session"
-echo ""
-echo "Press enter when ready to proceed or control + c to cancel"
-echo ""
+# Need curl installed to proceed
+doas apk add curl -y
 
 # Prompt user to select stable or rolling branch
-echo ""
 echo "Enter 1 for stable or 2 for edge release:"
+echo ""
+echo "Be aware this script assumes the newest stable ISO is being used!"
+echo "As of this running that release is:"
+
+# Curl + parse latest Alpine Linux release
+# Command breakdown
+# curl -s, download page silently
+# grep -oP 'v\d+\.\d+', parse versions
+# sort -V, sort by version
+# uniq, remove duplicate entries
+# tail -n 1, output latest version
+curl -s https://dl-cdn.alpinelinux.org/alpine/ \
+    | grep -oP 'v\d+\.\d+' \
+    | sort -V \
+    | uniq \
+    | tail -n 1
+
 echo ""
 echo "Press enter when ready to proceed or control + c to cancel"
 echo ""
 
 read releaseVersion
 
+exit 1
+
+# Parse Alpine releases for to find newest release
+# Curl + parse latest Alpine Linux release
+# Command breakdown
+# curl -s, download page silently
+# grep -oP 'v\d+\.\d+', parse versions
+# sort -V, sort by version
+# uniq, remove duplicate entries
+# tail -n 1, output latest version
+# sed "s/\./\\\./g", Change . to \. for sed string
+latestRelease=$(curl -s https://dl-cdn.alpinelinux.org/alpine/ \
+    | grep -oP 'v\d+\.\d+' \
+    | sort -V \
+    | uniq \
+    | tail -n 1 \
+    | sed "s/\./\\\./g")
+
 if [[ $releaseVersion -eq 1 ]]; then
     echo "Stable"
     ## Set to always use latest stable release, update version as needed
-    doas sed -i "s/v3\.22/latest-stable/g" /etc/apk/repositories
+    doas sed -i "s/$latestRelease/latest-stable/g" /etc/apk/repositories
 
     ## Enable community repo
     doas sed -i "s/#http/http/g" /etc/apk/repositories
 elif [[ $releaseVersion -eq 2 ]]; then
     echo "Edge"
     ## Set to use edge rolling release
-    doas sed -i "s/v3\.22/edge/g" /etc/apk/repositories
+    doas sed -i "s/$latestRelease/edge/g" /etc/apk/repositories
 
     ## Enable community repo
     doas sed -i "s/#http/http/g" /etc/apk/repositories
@@ -43,7 +73,6 @@ else
 fi
 
 # Prompt user to check repo
-echo ""
 echo "Double check repo files before proceeding."
 echo ""
 echo "Ensure no typos and that community repo is enabled."
@@ -136,7 +165,6 @@ chsh -s $(which zsh)
 cd ~/
 doas setup-desktop
 
-# Commented out for now, may not be needed
-## Configure flatpak
-#doas apk add flatpak
-#flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+# Configure flatpak
+doas apk add flatpak
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
