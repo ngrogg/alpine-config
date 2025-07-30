@@ -5,10 +5,11 @@
 # By Nicholas Grogg
 
 # Need curl installed to proceed
-doas apk add curl -y
+doas apk add curl grep -y
 
 # Prompt user to select stable or rolling branch
-echo "Enter 1 for stable or 2 for edge release:"
+echo ""
+echo "Enter 1 for stable or 2 for edge release"
 echo ""
 echo "Be aware this script assumes the newest stable ISO is being used!"
 echo "As of this running that release is:"
@@ -27,12 +28,10 @@ curl -s https://dl-cdn.alpinelinux.org/alpine/ \
     | tail -n 1
 
 echo ""
-echo "Press enter when ready to proceed or control + c to cancel"
+echo "Input 1 or 2 and press enter when ready to proceed or control + c to cancel"
 echo ""
 
 read releaseVersion
-
-exit 1
 
 # Parse Alpine releases for to find newest release
 # Curl + parse latest Alpine Linux release
@@ -51,6 +50,7 @@ latestRelease=$(curl -s https://dl-cdn.alpinelinux.org/alpine/ \
     | sed "s/\./\\\./g")
 
 if [[ $releaseVersion -eq 1 ]]; then
+    echo ""
     echo "Stable"
     ## Set to always use latest stable release, update version as needed
     doas sed -i "s/$latestRelease/latest-stable/g" /etc/apk/repositories
@@ -58,6 +58,7 @@ if [[ $releaseVersion -eq 1 ]]; then
     ## Enable community repo
     doas sed -i "s/#http/http/g" /etc/apk/repositories
 elif [[ $releaseVersion -eq 2 ]]; then
+    echo ""
     echo "Edge"
     ## Set to use edge rolling release
     doas sed -i "s/$latestRelease/edge/g" /etc/apk/repositories
@@ -73,6 +74,7 @@ else
 fi
 
 # Prompt user to check repo
+echo ""
 echo "Double check repo files before proceeding."
 echo ""
 echo "Ensure no typos and that community repo is enabled."
