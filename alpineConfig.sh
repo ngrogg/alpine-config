@@ -5,7 +5,7 @@
 # By Nicholas Grogg
 
 # Need curl installed to proceed
-doas apk add curl grep -y
+doas apk add curl grep
 
 # Prompt user to select stable or rolling branch
 echo ""
